@@ -6,14 +6,11 @@ using System.Linq;
 namespace Epilog.Collections.Graphs
 {
 
-    public class DirectedMultiGraph<TVertex, TEdge, TOuterMap, TInnerMap, TInnerList> : DirectedMultiGraphBase<TVertex,TEdge,TOuterMap,TInnerMap,TInnerList>, IGraph<TVertex, TEdge>
-        where TInnerList : IList<TEdge>, new()
-        where TInnerMap : IDictionary<TVertex, TInnerList>, new()
-        where TOuterMap : IDictionary<TVertex, TInnerMap>, new()
+    public class DirectedMultiGraph<TVertex,TEdge> : ReadOnlyDirectedMultiGraph<TVertex,TEdge>, IDirectedMultiGraph<TVertex,TEdge>
     {
 
         #region IGraph Implementation
-        public override void Add(TVertex source, TVertex dest, TEdge data)
+        public void Add(TVertex source, TVertex dest, TEdge data)
         {
             var outgoingMap = GetOutgoingEdgesMap(source);
             var incomingMap = GetIncomingEdgesMap(dest);
@@ -34,7 +31,7 @@ namespace Epilog.Collections.Graphs
             incomingList.Add(data);
         }
 
-        public override bool AddVertex(TVertex vertex)
+        public bool AddVertex(TVertex vertex)
         {
             if (OutgoingEdges.ContainsKey(vertex))
                 return false;
@@ -43,7 +40,7 @@ namespace Epilog.Collections.Graphs
             return true;
         }
 
-        public override bool RemoveEdges(TVertex source, TVertex dest)
+        public bool RemoveEdges(TVertex source, TVertex dest)
         {
             if (!OutgoingEdges.ContainsKey(source))
                 return false;
@@ -56,7 +53,7 @@ namespace Epilog.Collections.Graphs
             return true;
         }
 
-        public override bool RemoveEdge(TVertex source, TVertex dest, TEdge data)
+        public bool RemoveEdge(TVertex source, TVertex dest, TEdge data)
         {
             if (!OutgoingEdges.ContainsKey(source))
                 return false;
@@ -81,7 +78,7 @@ namespace Epilog.Collections.Graphs
             return foundOut;
         }
 
-        public override bool RemoveVertex(TVertex vertex)
+        public bool RemoveVertex(TVertex vertex)
         {
             if (!OutgoingEdges.ContainsKey(vertex))
                 return false;
@@ -94,7 +91,7 @@ namespace Epilog.Collections.Graphs
             return true;
         }
 
-        public override bool RemoveVertices(IEnumerable<TVertex> vertices)
+        public bool RemoveVertices(IEnumerable<TVertex> vertices)
         {
             bool changed = false;
             foreach (var vertex in vertices)
@@ -105,21 +102,7 @@ namespace Epilog.Collections.Graphs
             return changed;
         }
 
-        public override IEnumerable<TEdge> GetOutgoingEdges(TVertex vertex)
-        {
-            if (!OutgoingEdges.ContainsKey(vertex))
-                return Enumerable.Empty<TEdge>();
-            return OutgoingEdges[vertex].SelectMany(v => v.Value);
-        }
-
-        public override IEnumerable<TEdge> GetIncomingEdges(TVertex vertex)
-        {
-            if (!IncomingEdges.ContainsKey(vertex))
-                return Enumerable.Empty<TEdge>();
-            return IncomingEdges[vertex].SelectMany(v => v.Value);
-        }
-
-        public override void RemoveZeroDegreeNodes()
+        public void RemoveZeroDegreeNodes()
         {
             var toDelete = OutgoingEdges.Keys.Where(vertex => !OutgoingEdges[vertex].Any() && !IncomingEdges[vertex].Any());
             foreach (var vertex in toDelete)
@@ -131,7 +114,7 @@ namespace Epilog.Collections.Graphs
 
         #endregion
 
-        private TInnerMap GetOutgoingEdgesMap(TVertex vertex)
+        private IDictionary<TVertex,IList<TEdge>> GetOutgoingEdgesMap(TVertex vertex)
         {
             if (OutgoingEdges.TryGetValue(vertex, out var map))
                 return map;
@@ -141,7 +124,7 @@ namespace Epilog.Collections.Graphs
             return map;
         }
 
-        private TInnerMap GetIncomingEdgesMap(TVertex vertex)
+        private IDictionary<TVertex, IList<TEdge>> GetIncomingEdgesMap(TVertex vertex)
         {
             if (IncomingEdges.TryGetValue(vertex, out var map))
                 return map;
@@ -152,21 +135,4 @@ namespace Epilog.Collections.Graphs
         }
     }
 
-    public class DirectedMultiGraph<TVertex, TEdge, TOuterMap, TInnerMap> : DirectedMultiGraph<TVertex, TEdge, TOuterMap, TInnerMap, List<TEdge>>
-        where TInnerMap : IDictionary<TVertex, List<TEdge>>, new()
-        where TOuterMap : IDictionary<TVertex, TInnerMap>, new()
-    {
-
-    }
-
-    public class DirectedMultiGraph<TVertex,TEdge,TOuterMap> : DirectedMultiGraph<TVertex,TEdge,TOuterMap,Dictionary<TVertex,List<TEdge>>>
-        where TOuterMap : IDictionary<TVertex, Dictionary<TVertex,List<TEdge>>>, new()
-    {
-
-    }
-
-    public class DirectedMultiGraph<TVertex,TEdge> : DirectedMultiGraph<TVertex,TEdge, Dictionary<TVertex, Dictionary<TVertex, List<TEdge>>>>
-    {
-
-    }
 }

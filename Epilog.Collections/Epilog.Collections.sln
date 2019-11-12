@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epilog.Collections", "Epilog.Collections\Epilog.Collections.csproj", "{9D2F4B6F-7E0A-4892-888F-A04C118BDA15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epilog.Collections", "Epilog.Collections\Epilog.Collections.csproj", "{9D2F4B6F-7E0A-4892-888F-A04C118BDA15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epilog.Collections.Graphs", "Epilog.Collections.Graphs\Epilog.Collections.Graphs.csproj", "{B20BD296-8615-4721-99AC-19EFB22AD75B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Epilog.Collections.Graphs", "Epilog.Collections.Graphs\Epilog.Collections.Graphs.csproj", "{B20BD296-8615-4721-99AC-19EFB22AD75B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

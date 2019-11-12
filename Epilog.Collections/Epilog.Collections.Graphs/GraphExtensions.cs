@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Epilog.Collections.Graphs
 {
@@ -21,7 +18,7 @@ namespace Epilog.Collections.Graphs
         //    return connectedComponents;
         //}
 
-        
+
 
         //private static IEnumerable<TVertex> BreadthFirstSearch<TVertex,TEdge>(LinkedList<TVertex> todo, IGraph<TVertex,TEdge> graph, LinkedList<TVertex> verticesLeft)
         //{
@@ -31,7 +28,7 @@ namespace Epilog.Collections.Graphs
         //        var node = todo.First;
         //        cc.AddLast(node);
         //        todo.RemoveFirst();
-                
+
         //        foreach(var neighbor in graph.GetNeighbors(node.Value))
         //        {
         //            if(verticesLeft.Contains(neighbor))
@@ -46,7 +43,10 @@ namespace Epilog.Collections.Graphs
         //    return cc;
         //}
 
-        public static IEnumerable<IEnumerable<TVertex>> ConnectedComponents<TVertex, TEdge>(this IGraph<TVertex, TEdge> graph)
+        public static ImmutableDirectedMultiGraph<TVertex, TEdge> ToImmutableGraph<TVertex, TEdge>(this ReadOnlyDirectedMultiGraph<TVertex, TEdge> graph)
+            => new ImmutableDirectedMultiGraph<TVertex, TEdge>(graph.OutgoingEdges, graph.IncomingEdges);
+
+        public static IEnumerable<IEnumerable<TVertex>> ConnectedComponents<TVertex, TEdge>(this IDirectedMultiGraph<TVertex, TEdge> graph)
         {
             var todo = new List<TVertex>();
             var verticesLeft = new List<TVertex>(graph.Vertices);
@@ -58,7 +58,7 @@ namespace Epilog.Collections.Graphs
             }
         }
 
-        private static IEnumerable<TVertex> BreadthFirstSearch<TVertex, TEdge>(IList<TVertex> todo, IGraph<TVertex, TEdge> graph, IList<TVertex> verticesLeft)
+        private static IEnumerable<TVertex> BreadthFirstSearch<TVertex, TEdge>(IList<TVertex> todo, IDirectedMultiGraph<TVertex, TEdge> graph, IList<TVertex> verticesLeft)
         {
             while (todo.Count > 0)
             {

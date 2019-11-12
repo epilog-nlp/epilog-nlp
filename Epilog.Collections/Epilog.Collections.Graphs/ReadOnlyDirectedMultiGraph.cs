@@ -5,33 +5,49 @@ using System.Linq;
 
 namespace Epilog.Collections.Graphs
 {
-    public abstract class DirectedMultiGraphBase<TVertex, TEdge, TOuterMap, TInnerMap, TInnerList> : IGraph<TVertex, TEdge>
-        where TInnerList : IList<TEdge>, new()
-        where TInnerMap : IDictionary<TVertex, TInnerList>, new()
-        where TOuterMap : IDictionary<TVertex, TInnerMap>, new()
+
+    public abstract class ReadOnlyDirectedMultiGraph<TVertex, TEdge> : IReadOnlyDirectedMultiGraph<TVertex, TEdge>
     {
-        protected static TOuterMap OuterMap => new TOuterMap();
+        protected ReadOnlyDirectedMultiGraph()
+        {
+            OutgoingEdges = OuterMap;
+            IncomingEdges = OuterMap;
+        }
 
-        protected static TInnerMap InnerMap => new TInnerMap();
+        protected internal ReadOnlyDirectedMultiGraph(IDictionary<TVertex, IDictionary<TVertex, IList<TEdge>>> outgoing,
+            IDictionary<TVertex, IDictionary<TVertex, IList<TEdge>>> incoming)
+        {
+            OutgoingEdges = outgoing;
+            IncomingEdges = incoming;
+        }
 
-        protected static TInnerList InnerList => new TInnerList();
+        protected virtual IDictionary<TVertex, IDictionary<TVertex, IList<TEdge>>> OuterMap => new Dictionary<TVertex, IDictionary<TVertex, IList<TEdge>>>();
 
-        protected TOuterMap OutgoingEdges { get; } = OuterMap;
+        protected virtual IDictionary<TVertex, IList<TEdge>> InnerMap => new Dictionary<TVertex, IList<TEdge>>();
 
-        protected TOuterMap IncomingEdges { get; } = OuterMap;
+        protected virtual IList<TEdge> InnerList => new List<TEdge>();
 
-        public abstract void Add(TVertex source, TVertex dest, TEdge data);
-        public abstract bool AddVertex(TVertex vertex);
-        public abstract bool RemoveEdges(TVertex source, TVertex dest);
-        public abstract bool RemoveEdge(TVertex source, TVertex dest, TEdge data);
-        public abstract bool RemoveVertex(TVertex vertex);
-        public abstract bool RemoveVertices(IEnumerable<TVertex> vertices);
+        internal virtual IDictionary<TVertex, IDictionary<TVertex, IList<TEdge>>> OutgoingEdges { get; }
 
+        internal virtual IDictionary<TVertex, IDictionary<TVertex, IList<TEdge>>> IncomingEdges { get; }
+
+        #region IReadOnlyGraph Implementation
         public int NumberOfVertices => OutgoingEdges.Count;
         public int NumberOfEdges => OutgoingEdges.Values.Sum(outer => outer.Values.Sum(inner => inner.Count));
 
-        public abstract IEnumerable<TEdge> GetOutgoingEdges(TVertex vertex);
-        public abstract IEnumerable<TEdge> GetIncomingEdges(TVertex vertex);
+        public IEnumerable<TEdge> GetOutgoingEdges(TVertex vertex)
+        {
+            if (!OutgoingEdges.ContainsKey(vertex))
+                return Enumerable.Empty<TEdge>();
+            return OutgoingEdges[vertex].SelectMany(v => v.Value);
+        }
+
+        public IEnumerable<TEdge> GetIncomingEdges(TVertex vertex)
+        {
+            if (!IncomingEdges.ContainsKey(vertex))
+                return Enumerable.Empty<TEdge>();
+            return IncomingEdges[vertex].SelectMany(v => v.Value);
+        }
         public IEnumerable<TVertex> GetParents(TVertex vertex)
             => IncomingEdges.TryGetValue(vertex, out var parentMap)
                 ? parentMap.Keys
@@ -68,7 +84,6 @@ namespace Epilog.Collections.Graphs
 
         public bool IsEmpty() => !OutgoingEdges.Any();
 
-        public abstract void RemoveZeroDegreeNodes();
         public IEnumerable<TEdge> GetEdges(TVertex source, TVertex dest)
             => OutgoingEdges.TryGetValue(source, out var childrenMap) && childrenMap.TryGetValue(dest, out var edges)
             ? edges
@@ -87,5 +102,7 @@ namespace Epilog.Collections.Graphs
                 return 0;
             return outer.Sum(edges => edges.Value.Count);
         }
+        #endregion
     }
+
 }
