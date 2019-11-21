@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Epilog.Math\Epilog.Math\Epilog.Math.csproj" />
+    <ProjectReference Include="..\Epilog.Text.Contracts\Epilog.Text.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

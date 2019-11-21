@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Epilog.Collections.Graphs
 {
-    public interface IReadOnlyDirectedMultiGraph<TVertex,TEdge>
+    public interface IReadOnlyDirectedMultigraph<TVertex, TEdge>
     {
         int NumberOfVertices { get; }
 

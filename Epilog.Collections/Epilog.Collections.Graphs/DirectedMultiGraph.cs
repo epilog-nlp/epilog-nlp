@@ -6,7 +6,7 @@ using System.Linq;
 namespace Epilog.Collections.Graphs
 {
 
-    public class DirectedMultiGraph<TVertex,TEdge> : ReadOnlyDirectedMultiGraph<TVertex,TEdge>, IDirectedMultiGraph<TVertex,TEdge>
+    public class DirectedMultiGraph<TVertex,TEdge> : ReadOnlyDirectedMultiGraph<TVertex,TEdge>, IDirectedMultigraph<TVertex,TEdge>
     {
 
         #region IGraph Implementation

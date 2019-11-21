@@ -46,7 +46,7 @@ namespace Epilog.Collections.Graphs
         public static ImmutableDirectedMultiGraph<TVertex, TEdge> ToImmutableGraph<TVertex, TEdge>(this ReadOnlyDirectedMultiGraph<TVertex, TEdge> graph)
             => new ImmutableDirectedMultiGraph<TVertex, TEdge>(graph.OutgoingEdges, graph.IncomingEdges);
 
-        public static IEnumerable<IEnumerable<TVertex>> ConnectedComponents<TVertex, TEdge>(this IDirectedMultiGraph<TVertex, TEdge> graph)
+        public static IEnumerable<IEnumerable<TVertex>> ConnectedComponents<TVertex, TEdge>(this IDirectedMultigraph<TVertex, TEdge> graph)
         {
             var todo = new List<TVertex>();
             var verticesLeft = new List<TVertex>(graph.Vertices);
@@ -58,7 +58,7 @@ namespace Epilog.Collections.Graphs
             }
         }
 
-        private static IEnumerable<TVertex> BreadthFirstSearch<TVertex, TEdge>(IList<TVertex> todo, IDirectedMultiGraph<TVertex, TEdge> graph, IList<TVertex> verticesLeft)
+        private static IEnumerable<TVertex> BreadthFirstSearch<TVertex, TEdge>(IList<TVertex> todo, IDirectedMultigraph<TVertex, TEdge> graph, IList<TVertex> verticesLeft)
         {
             while (todo.Count > 0)
             {

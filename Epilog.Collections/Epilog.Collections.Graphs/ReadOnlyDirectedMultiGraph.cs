@@ -6,7 +6,7 @@ using System.Linq;
 namespace Epilog.Collections.Graphs
 {
 
-    public abstract class ReadOnlyDirectedMultiGraph<TVertex, TEdge> : IReadOnlyDirectedMultiGraph<TVertex, TEdge>
+    public abstract class ReadOnlyDirectedMultiGraph<TVertex, TEdge> : IReadOnlyDirectedMultigraph<TVertex, TEdge>
     {
         protected ReadOnlyDirectedMultiGraph()
         {
@@ -58,7 +58,7 @@ namespace Epilog.Collections.Graphs
                 ? childMap.Keys
                 : Enumerable.Empty<TVertex>();
 
-        public IEnumerable<TVertex> GetNeighbors(TVertex vertex) => GetParents(vertex).Concat(GetChildren(vertex));
+        public IEnumerable<TVertex> GetNeighbors(TVertex vertex) => GetParents(vertex).Concat(GetChildren(vertex)).Distinct();
 
         public void Clear()
         {

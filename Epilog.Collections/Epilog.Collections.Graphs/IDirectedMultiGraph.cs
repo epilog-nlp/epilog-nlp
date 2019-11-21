@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Epilog.Collections.Graphs
 {
-    
-    public interface IDirectedMultiGraph<TVertex,TEdge> : IReadOnlyDirectedMultiGraph<TVertex, TEdge>
+
+    public interface IDirectedMultigraph<TVertex, TEdge> : IReadOnlyDirectedMultigraph<TVertex, TEdge>
     {
         void Add(TVertex source, TVertex dest, TEdge data);
 
         void Add(IEdge<TVertex, TEdge> edge) => Add(edge.Source, edge.Dest, edge.Weight);
 
         bool AddVertex(TVertex vertex);
-        
+
         bool RemoveEdges(TVertex source, TVertex dest);
 
         bool RemoveEdge(TVertex source, TVertex dest, TEdge data);
